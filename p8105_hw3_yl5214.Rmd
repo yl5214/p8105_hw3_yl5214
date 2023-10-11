@@ -13,3 +13,22 @@ knitr::opts_chunk$set(
 )
 ```
 
+## Problem 2
+```{r}
+library(p8105.datasets)
+data("brfss_smart2010")
+view(brfss_smart2010)
+```
+
+```{r}
+brfss=
+  janitor::clean_names(brfss_smart2010) |> 
+  filter(topic=='Overall Health') |> 
+  filter(response %in% c('Excellent', 'Very good','Good','Fair','Poor')) 
+
+    
+```
+
+
+
+
