@@ -21,14 +21,14 @@ view(brfss_smart2010)
 ```
 
 ```{r}
-brfss=
-  janitor::clean_names(brfss_smart2010) |> 
+brfss=brfss_smart2010 |> 
+  janitor::clean_names() |> 
   filter(topic=='Overall Health') |> 
-  filter(response %in% c('Excellent', 'Very good','Good','Fair','Poor')) 
+  filter(response %in% c('Excellent', 'Very good','Good','Fair','Poor')) |> 
+  mutate(
+    response= factor(response, levels = c("Poor", "Fair", "Good", "Very good","Excellent"), ordered = TRUE)
+  )
 
-    
+
 ```
-
-
-
 
