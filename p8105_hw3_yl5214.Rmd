@@ -64,6 +64,9 @@ brfss_excellent=brfss |>
   
 ```
 
+
+##Make a two-panel plot showing, for the years 2006, and 2010, distribution of data_value for responses (“Poor” to “Excellent”) among locations in NY State.
+
 ```{r}
 brfss_two=brfss |> 
   filter(
@@ -76,4 +79,51 @@ brfss_two=brfss |>
   facet_grid(. ~ year)
   
 ```
+
+## Problem 3
+
+##Load, tidy, merge, and otherwise organize the data sets. Your final dataset should include all originally observed variables; exclude participants less than 21 years of age, and those with missing demographic data; and encode data with reasonable variable classes (i.e. not numeric, and using factors with the ordering of tables and plots in mind).
+```{r}
+covar=
+  read_csv('data/nhanes_covar.csv', 
+           skip =4,
+           col_types=
+             cols(
+               'SEQN'=col_factor()
+             ))|> 
+  janitor::clean_names() |> 
+  filter(age>=21) |> 
+  drop_na(bmi) |> 
+  drop_na(education) |> 
+  mutate(
+    sex= case_match(
+      sex,
+      1~ 'male',
+      2 ~'female'
+    )
+  ) |> 
+  mutate(
+    education=case_match(
+      education,
+      1~'less than high school',
+      2~'high school equivalent',
+      3~'more than high school'
+    )
+  )
+```
+
+```{r}
+accel=
+  read_csv('data/nhanes_accel.csv', 
+           col_types=
+             cols(
+               'SEQN'=col_factor()
+             ))|> 
+  janitor::clean_names()
+
+merge=
+  left_join(covar,accel, by = 'seqn')
+
+```
+
 
