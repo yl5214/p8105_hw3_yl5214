@@ -126,4 +126,14 @@ merge=
 
 ```
 
+## Produce a reader-friendly table for the number of men and women in each education category, and create a visualization of the age distributions for men and women in each education category. Comment on these items.
+```{r}
+merge |>  
+  count(education,sex) |> 
+    pivot_wider(
+    names_from =sex,
+    values_from= n
+)
+knitr::kable
+```
 
