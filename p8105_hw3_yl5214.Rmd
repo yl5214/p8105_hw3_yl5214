@@ -128,12 +128,43 @@ merge=
 
 ## Produce a reader-friendly table for the number of men and women in each education category, and create a visualization of the age distributions for men and women in each education category. Comment on these items.
 ```{r}
-merge |>  
+merge |> 
   count(education,sex) |> 
     pivot_wider(
     names_from =sex,
     values_from= n
-)
-knitr::kable
+) |> 
+knitr::kable()
 ```
+
+#### Comment:
+The number of male and female are similar in less than high school and more than high school category. For high school equivalent education, the number of male and female are very different. The number of male and female in more than high school category are the highest among all three catergories. There is an increasing trend in number of male and female when education level increase.
+```{r}
+merge |> 
+  ggplot(aes(x = age, y = sex, color = sex)) + 
+  geom_boxplot() + 
+  facet_grid(. ~ education)
+```
+#### Comment:
+
+
+## Traditional analyses of accelerometer data focus on the total activity over the day. Using your tidied dataset, aggregate across minutes to create a total activity variable for each participant. Plot these total activities (y-axis) against age (x-axis); your plot should compare men to women and have separate panels for each education level. Include a trend line or a smooth to illustrate differences. Comment on your plot.
+
+```{r}
+merge_aggregate=merge |>
+  group_by (seqn,sex,education,age) |> 
+  pivot_longer(
+    min1:min1440,
+    names_to = "minute",
+    names_prefix = "min",
+    values_to = "activity"
+  ) |> 
+  summarize(total_activity = sum(activity)) |> 
+  ggplot(aes(x=age , y=total_activity, color= sex))+
+  geom_point()+
+  geom_smooth()+
+  facet_grid(. ~ education)+
+  labs(x = "Age", y = "Total Activity", color = "sex")
+```
+#### Comment: For 'high school equivalent' graph, total activity of female is overall greater than the total activity of man across age 20 to 80. Both male and female have an overall decreasing trendline from age 40 to 80, although they both have a slight increase from age 20 to 40, with the peak in age 40. For 'less than high school' graph, total activity of male is overall greater than the total activity of female across age 20 to 80. Both male and female have an overall decreasing trendline from age 20 to 80, although total activity of male has a bigger spike from age 40 to 60 with peak activity in age 20. For 'more than high school' graph, total activity of female is overall greater than the total activity of man across age 20 to 80. Both male and female have an overall decreasing trendline from age 20 to 80. However, from age 20 to 60, the total activity of female is constant. From age 20 to 40, the total activity of male is constant.
 
