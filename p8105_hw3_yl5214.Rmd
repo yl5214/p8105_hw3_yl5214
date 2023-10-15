@@ -35,27 +35,6 @@ scale_colour_discrete = scale_colour_viridis_d
 scale_fill_discrete = scale_fill_viridis_d
 ```
 
-### Due date
-
-Due: October 14 at 4:00pm. 
-
-### Points
-
-| Problem         | Points    |
-|:--------------- |:--------- |
-| Problem 0       | 20        |
-| Problem 1       | --        |
-| Problem 2       | 40        |
-| Problem 3       | 40        |
-| Optional survey | No points |
-
-
-### Problem 0
-
-This solution focuses on a reproducible report containing code and text necessary for Problems 1-3, and is organized as an R Project. This was not prepared as a GitHub repo; examples for repository structure and git commits should be familiar from other elements of the course.
-
-Throughout, we use appropriate text to describe our code and results, and use clear styling to ensure code is readable. 
-
 ### Problem 1
 
 #### Read in the data
@@ -181,6 +160,8 @@ instacart |>
     values_from = mean_hour) |>
   knitr::kable(digits = 2)
 ```
+
+
 ## Problem 2
 ```{r}
 library(p8105.datasets)
@@ -227,10 +208,15 @@ brfss_excellent=brfss |>
     average_value= mean(data_value, na.rm = TRUE),
     .groups = 'drop')|> 
   ggplot(aes (x= year, y= average_value, color=state))+
-  geom_line()
-  
+  geom_line()+
+    labs(
+      title = "spaghetti plot of the average value over time within a state",
+       x = "Year",
+       y = "Average value") 
+
+brfss_excellent  
 ```
-#### Comment:
+#### Comment: Except three states, all other states have average values that range from about 15 to 30 between year 2002 to 2010. All the states have the values up and down throughout the 200-2010 peiods. Some of the states exhibits higher average values like around 25 while others exhibits the lower average value around 20. The difference of average value between each state is relatively small.
 
 ##Make a two-panel plot showing, for the years 2006, and 2010, distribution of data_value for responses (“Poor” to “Excellent”) among locations in NY State.
 
@@ -241,12 +227,18 @@ brfss_two=brfss |>
          ) |> 
   filter(state == 'NY') |> 
   group_by (year) |> 
-  ggplot(aes (x= response, y= data_value))+
+  ggplot(aes (x= response, y= data_value, color= response))+
   geom_boxplot()+
-  facet_grid(. ~ year)
-  
+  facet_grid(. ~ year)+  
+  labs(
+       x = "Response",
+       y = "Data value",
+       title = "Distribution of responses by location in New York State for year 2006 and 2010"
+       )
+
+brfss_two
 ```
-#### Comment:
+#### Comment: The distribution of response in year 2016 exhibits the similar pattern to the distribution of response in year 2010. The average value for 'very good' in 2010 is greater than the average value for 'very good' in 2006. The average value for 'good' in 2010 is smaller than the average value for 'good' in 2006.
 
 ## Problem 3
 
@@ -320,6 +312,10 @@ merge |>
   ggplot(aes(x = age, y = sex, color = sex)) + 
   geom_boxplot() + 
   facet_grid(. ~ education)
+  labs(
+       x = "Age",
+       y = "Sex",
+      title = "Boxplot plot of age distribution at different education levels")
 ```
 #### Comment: The distribution of age for both male and female is similar for category of education less than high school with median age 60. For high school equivalent group, the median age and the overall age distribution of male is younger than the female group. The median age of male is around 50 whereas median age of female is around 60. Finally, For more than high school group, the age  distribution and median age of female is relatively younger than those of males. 
 
@@ -340,6 +336,8 @@ merge_aggregate=merge |>
     color = "sex",
     title =" Total activities against age"
     )
+
+merge_aggregate
 ```
 #### Comment: For 'less than high school' graph, total activity of male is overall greater than the total activity of female across age 20 to 80. Both male and female have an overall decreasing trendline from age 20 to 80, although total activity of male has a bigger spike from age 40 to 60 with peak activity in age 20. For 'high school equivalent' graph, total activity of female is overall greater than the total activity of man across age 20 to 80. Both male and female have an overall decreasing trendline from age 40 to 80, although they both have a slight increase from age 20 to 40, with the peak in age 40.  For 'more than high school' graph, total activity of female is overall greater than the total activity of man across age 20 to 80. Both male and female have an overall decreasing trendline from age 20 to 80. However, from age 20 to 60, the total activity of female is constant. From age 20 to 40, the total activity of male is constant.
 
@@ -358,6 +356,8 @@ plot_merge=merge|>
     color = "sex",
     title = "24-hour activity time courses for each education level"
   )
+
+plot_merge
 ```
 ####Comment: Regardless of education category and sex, participants show the same activity pattern around the day. In the morning, the activity is the lowest among male and female group. The peak activity level is seen around 750 minutes and plateau for around 300 minutes.Then, the activity level deio significantly in the evening. Female in 'more than high school' category exhibits higher activity level throughout the day than Male.
 
